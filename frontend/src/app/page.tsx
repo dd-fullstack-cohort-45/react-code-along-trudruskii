@@ -1,34 +1,39 @@
 'use client'
 
 import Image from 'next/image'
-import {Button, Navbar} from "flowbite-react";
+import {Button, Card, Navbar} from "flowbite-react";
 import React from "react";
 import Link from "next/link";
 
 export default function Home() {
+    const [posts, setPosts] = React.useState([])
+    const effect = () => {
+        fetch('https://ddc-web-student.cnm.edu/apis/')
+            .then(response => response.json())
+            .then((parsedJson) => {
+                setPosts(parsedJson.data)
+        })
+    }
+    React.useEffect(effect, [setPosts])
+
+    console.log(posts)
   return (
     <>
+      <div className="container mx-auto">
+        <div className="div grid col-span-1 md:grid-cols-2 place-items-center p-10">
+            {posts.map((post: any, index) => (
+                <Card className="max-w-sm" key={index}>
+                    <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        {post.title}
+                    </h5>
+                    <p className="font-normal text-gray-700 dark:text-gray-400">
+                        {post.body}
+                    </p>
+                </Card>
+            ))}
+        </div>
+      </div>
 
-      <Navbar fluid rounded>
-        <Navbar.Brand as={Link} href="https://flowbite-react.com">
-          <img src="/favicon.svg" className="mr-3 h-6 sm:h-9" alt="Flowbite React Logo" />
-          <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Flowbite React</span>
-        </Navbar.Brand>
-        <Navbar.Toggle />
-        <Navbar.Collapse>
-          <Navbar.Link href="#" active>
-            Home
-          </Navbar.Link>
-          <Navbar.Link as={Link} href="#">
-            About
-          </Navbar.Link>
-          <Navbar.Link href="#">Services</Navbar.Link>
-          <Navbar.Link href="#">Pricing</Navbar.Link>
-          <Navbar.Link href="#">Contact</Navbar.Link>
-        </Navbar.Collapse>
-      </Navbar>
-      <h1>Is this thing?</h1>
-      <Button color={"blue"}>Click me</Button>
     </>
 
 
